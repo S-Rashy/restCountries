@@ -1,0 +1,93 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    margin: 0;
+    cursor: pointer;
+}
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    height: 55px;
+    text-align: center;
+    /* border: 1px solid; */
+    padding: 0px 50px;
+    box-shadow: 1px 1px 1px gray;
+    /* background-color: white; */
+    div{
+        /* border: 1px solid; */
+        height: 30px;
+        /* align-items: center; */
+    }
+}
+#dark{
+    display: none;
+}
+#search{
+    display: flex;
+    justify-content: space-between;
+    /* border: 1px solid; */
+    padding: 20px 50px;   
+}
+#searchCountry{
+    width: 300px;
+    height: 35px;
+    border: none;
+    box-shadow: 1px 1px 1px gray;
+
+}
+.display{
+    padding: 0px 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 55px;
+    div{
+        /* border: 1px solid; */
+        max-width: 250px;
+        /* background-color: white; */
+        /* padding: 20px; */
+        box-shadow: 2px 2px 5px  hsla(0, 0%, 0%, 0.5);
+
+    }
+    img{
+        width: 250px;
+        max-height: 200px;
+    }
+    h3, h5{
+        margin: 20px;
+    }
+    span{
+        font-weight: 500;
+    }
+}
+.displayDetails{
+    border: 1px solid;
+    width: 450px;
+    box-shadow: 1px 1px 1px 2px gray;
+}
+.countryCardD{
+    /* display: flex; */
+    background-color: aqua;
+    border: 1px solid green;
+}
+#backBtn{
+    display: none;
+}
+@media screen and (max-width: 550px) {
+    #search{
+        flex-direction: column;
+        /* align-items: center; */
+        gap: 40px;
+
+    }
+    #searchCountry{
+        width: 80vw;
+    }
+    #filterRegion{
+        width: 50vw;
+        height: 40px;
+
+    }
+}
