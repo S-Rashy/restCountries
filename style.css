@@ -1,93 +1,275 @@
-*{
-    box-sizing: border-box;
+* {
+  box-sizing: border-box;
 }
-body{
-    margin: 0;
-    cursor: pointer;
-}
-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    height: 55px;
-    text-align: center;
-    /* border: 1px solid; */
-    padding: 0px 50px;
-    box-shadow: 1px 1px 1px gray;
-    /* background-color: white; */
-    div{
-        /* border: 1px solid; */
-        height: 30px;
-        /* align-items: center; */
-    }
-}
-#dark{
-    display: none;
-}
-#search{
-    display: flex;
-    justify-content: space-between;
-    /* border: 1px solid; */
-    padding: 20px 50px;   
-}
-#searchCountry{
-    width: 300px;
-    height: 35px;
-    border: none;
-    box-shadow: 1px 1px 1px gray;
 
+body {
+  margin: 0;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  background-color: #fafafa;
+  color: #111517;
+  transition: all 0.3s ease;
+  font-weight: 400;
 }
-.display{
-    padding: 0px 40px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    gap: 55px;
-    div{
-        /* border: 1px solid; */
-        max-width: 250px;
-        /* background-color: white; */
-        /* padding: 20px; */
-        box-shadow: 2px 2px 5px  hsla(0, 0%, 0%, 0.5);
 
-    }
-    img{
-        width: 250px;
-        max-height: 200px;
-    }
-    h3, h5{
-        margin: 20px;
-    }
-    span{
-        font-weight: 500;
-    }
+body.dark {
+  background-color: #202c37;
+  color: #ffffff;
 }
-.displayDetails{
-    border: 1px solid;
-    width: 450px;
-    box-shadow: 1px 1px 1px 2px gray;
-}
-.countryCardD{
-    /* display: flex; */
-    background-color: aqua;
-    border: 1px solid green;
-}
-#backBtn{
-    display: none;
-}
-@media screen and (max-width: 550px) {
-    #search{
-        flex-direction: column;
-        /* align-items: center; */
-        gap: 40px;
 
-    }
-    #searchCountry{
-        width: 80vw;
-    }
-    #filterRegion{
-        width: 50vw;
-        height: 40px;
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  height: 55px;
+  text-align: center;
+  padding: 0px 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+}
 
-    }
+body.dark header {
+  background-color: #2b3945;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+header div {
+  height: 30px;
+}
+
+#modeToggle {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#search {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 50px;
+}
+
+#searchCountry {
+  width: 300px;
+  height: 35px;
+  border: none;
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.05);
+  padding: 0 20px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #111517;
+  transition: all 0.3s ease;
+}
+
+body.dark #searchCountry {
+  background-color: #2b3945;
+  color: #ffffff;
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.3);
+}
+
+#filterRegion {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #111517;
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+body.dark #filterRegion {
+  background-color: #2b3945;
+  color: #ffffff;
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.3);
+}
+
+.display {
+  padding: 0px 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 55px;
+}
+
+.countryCard {
+  max-width: 250px;
+  box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.03);
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+body.dark .countryCard {
+  background-color: #2b3945;
+  box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.3);
+}
+
+.countryCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1);
+}
+
+body.dark .countryCard:hover {
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.4);
+}
+
+.countryCard img {
+  width: 250px;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.content {
+  padding: 20px;
+}
+
+.content h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.content p {
+  margin: 5px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.content span {
+  font-weight: 300;
+}
+
+.countryCardD {
+  background-color: #ffffff;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.03);
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+body.dark .countryCardD {
+  background-color: #2b3945;
+  box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.3);
+}
+
+.countryCardD img {
+  width: 400px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+
+.details {
+  flex: 1;
+}
+
+.details h3 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.details-column h5 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.borders-section h5 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.details span {
+  font-weight: 300;
+}
+
+#backBtn {
+  display: none;
+  padding: 10px 30px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #111517;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+body.dark #backBtn {
+  background-color: #2b3945;
+  color: #ffffff;
+}
+
+#backBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1);
+}
+
+.error {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  padding: 40px;
+}
+
+body.dark .error {
+  color: #ccc;
+}
+
+@media screen and (max-width: 768px) {
+  #search {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  #searchCountry {
+    width: 100%;
+  }
+
+  #filterRegion {
+    width: 50%;
+    height: 40px;
+  }
+
+  .countryCardD {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .countryCardD img {
+    width: 100%;
+    height: 200px;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  header {
+    padding: 0 20px;
+  }
+
+  .display {
+    padding: 0 20px;
+  }
 }

@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rest Countries</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
 </head>
 <body>
     <div class="wrapper">
@@ -14,42 +18,28 @@
             </div>
     
             <div id="headerRight">
-                <div id="dark"> 🔆 Light Mode</div>
-                <div id="light">🌙 Dark Mode</div>
+                <div id="modeToggle">🌙 Dark Mode</div>
             </div>
         </header>
     
         <div id="search">
-            <input type="search" id="searchCountry" placeholder="🔍 Search for a country.." >
+            <input type="search" id="searchCountry" placeholder="🔍 Search for a country..">
     
-            <select name="" id="filterRegion"  >
-    
+            <select id="filterRegion">
                 <option value="" selected hidden>Filter by region</option>
-                <option value="africa" >Africa</option>
-                <option value="america" >America</option>
-                <option value="asia" >Asia</option>
+                <option value="all">All</option>
+                <option value="africa">Africa</option>
+                <option value="americas">Americas</option>
+                <option value="asia">Asia</option>
                 <option value="europe">Europe</option>
                 <option value="oceania">Oceania</option>
-    
             </select> 
 
-            <button id="backBtn" onclick="loadAll()">Back</button>
-
+            <button id="backBtn">← Back</button>
         </div>
     
-        <div class="display">
-                
-    
-        </div>
-    
-        
-    <!-- <div class="displayDetails" style="display: none;">
-
-
-        </div> -->
-
+        <div class="display"></div>
     </div>
-
 
     <script src="script.js"></script>
 </body>

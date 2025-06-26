@@ -1,240 +1,261 @@
 const display = document.querySelector(".display");
-const darkmode = document.querySelector("#dark");
-const lightmode = document.querySelector("#light");
-// const countryCard = document.querySelector(".countryCard")
-const wrapper = document.querySelector(".wrapper")
-const displayDetails = document.querySelector(".displayDetails")
+const modeToggle = document.querySelector("#modeToggle");
+const wrapper = document.querySelector(".wrapper");
+const searchCountry = document.querySelector("#searchCountry");
+const filterRegion = document.querySelector("#filterRegion");
+const backBtn = document.querySelector("#backBtn");
 
-function loadAll() {
-    
-const apiLink = "https://restcountries.com/v3.1/all";
+let isDarkMode = false;
+let allCountries = [];
+let filteredCountries = [];
 
-//fetching the general api and displaying all countries
-fetch(apiLink)
-  .then((response) => response.json())
-  .then((data) => { 
-    
-    let card = "";
-    data.map((country)=>{
-
-        card += `<div class="countryCard"  id="${country.name.common}" >  
-    
-
-            <img src="${country.flags.svg}" alt="flag"/> 
-                <h3 class="country">${country.name.common}</h3>    
-                <h5 class="population">Population : <span>${country.population}</span></h5>
-                <h5 class="region">Region : <span>${country.region}</span></h5>
-                <h5 class="capital">Capital : <span>${country.capital}</span></h5>
-
-            </div>`
-
-        display.innerHTML = card;
-
-            const countrycard = document.querySelector(".countryCard")
-
-            //displaying the details of each country when clicked
-
-        countrycard.addEventListener("click", ()=>{
-            
-            // for (let i = 0; i < display.length; i++) {
-
-            //     display[i].addEventListener("click", (event)=>{
-            //     let newevent = event.target
-            //     // console.log(newevent);
-            //     let parentevent=newevent.parentElement.children[0];
-            //     console.log(parentevent);
-                
-                  
-            const countdetails =
-            `<div class="countryCardD" >  
-
-                <img src="${country.flags.svg}" alt="flag" width=300px/> 
-             
-                <h3 class="country">${country.name.common}</h3>   
-                <h3 class="country">${country.name.nativeName}</h3>   
-
-                <h5 class="population">Population : <span>${country.population}</span></h5>
-                <h5 class="region">Region : <span>${country.region}</span></h5>
-                <h5 class="subregion">Sub Region : <span>${country.subregion}</span></h5>
-                <h5 class="capital">Capital : <span>${country.capital}</span></h5>
-                <h5 class="domain">Top Level Domain : <span>${country.tld}</span></h5>
-              <h5 class="currency">Currencies : <span>${country.currencies}</span></h5>
-              <h5 class="languages">Sub Region : <span>${country.languages}</span></h5>
-                
-                
-            </div>`
-
-            display.innerHTML = countdetails;
-            document.querySelector("#backBtn").style.display="block"
-            document.querySelector("#searchCountry").style.display="none"
-            document.querySelector("#filterRegion").style.display="none"
-           
-
-        })
-   
-    });
-                       
-    });
-    document.querySelector("#backBtn").style.display="none"
-    document.querySelector("#searchCountry").style.display="block"
-    document.querySelector("#filterRegion").style.display="block"
-         
-};
-
-
- loadAll()
-
-//search by country feature
-
-function search(){
-
-    const searchCountry = document.querySelector("#searchCountry").value
-    if (searchCountry.length > 0) {       
-
-    const nameLink = `https://restcountries.com/v3.1/name/${searchCountry}`;
-
-    fetch(nameLink)
-  .then((response) => response.json())
-  .then((data) => { 
-    
-    let card = "";
-    data.map((country)=>{
-
-        card += `<div class="countryCard">  
-
-            <img src="${country.flags.svg}" alt="flag"/> 
-                <h3 class="country">${country.name.common}</h3>    
-                <p class="population">Population : <span>${country.population}</span></p>
-                <p class="region">Region : <span>${country.region}</span></p>
-                <p class="capital">Capital : <span>${country.capital}</span></p>
-
-            </div>`
-
-        display.innerHTML = card;
-                       
-    })
-//    .catch(error=>{
-//     console.error(error)
-   //})           
-
-})
-}
- else{
-    if (searchCountry == "" ) {
-        loadAll()
+async function loadAll() {
+  try {
+    const response = await fetch("data.json");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    const data = await response.json();
+    allCountries = data;
+    filteredCountries = data;
+    displayCountries(data);
+    showMainControls();
+  } catch (error) {
+    console.error("Error loading data:", error);
+    display.innerHTML =
+      '<div class="error">Failed to load countries data. Please make sure data.json file exists and is properly formatted.</div>';
+  }
 }
-};
 
-searchCountry.addEventListener("input", search )
+function displayCountries(countries) {
+  if (!countries || countries.length === 0) {
+    display.innerHTML = '<div class="error">No countries found.</div>';
+    return;
+  }
 
-//filtering countries by region
+  let cards = "";
+  countries.forEach((country, index) => {
+    const population = country.population
+      ? country.population.toLocaleString()
+      : "N/A";
+    const capital = country.capital
+      ? Array.isArray(country.capital)
+        ? country.capital[0]
+        : country.capital
+      : "N/A";
+    const region = country.region || "N/A";
+    const flagUrl =
+      country.flags?.svg || country.flags?.png || country.flag || "";
 
-function loadRegion(){
+    cards += `
+                    <div class="countryCard" onclick="showCountryDetails(${allCountries.indexOf(
+                      country
+                    )})">
+                        <img src="${flagUrl}" alt="${
+      country.name?.common || country.name
+    } flag"/>
+                        <div class="content">
+                            <h3>${country.name?.common || country.name}</h3>
+                            <p>Population: <span>${population}</span></p>
+                            <p>Region: <span>${region}</span></p>
+                            <p>Capital: <span>${capital}</span></p>
+                        </div>
+                    </div>
+                `;
+  });
+  display.innerHTML = cards;
+}
 
-    const filterRegion = document.querySelector("#filterRegion").value
-    const regionLink = `https://restcountries.com/v3.1/region/${filterRegion}`;
-    console.log(filterRegion);
-    fetch(regionLink)
-   .then((response) => response.json())
-   .then((data) => { 
-    
-    let card = "";
-    data.map((country)=>{
+function showCountryDetails(index) {
+  const country = allCountries[index];
+  if (!country) return;
 
-        card += `<div class="countryCard">  
+  const population = country.population
+    ? country.population.toLocaleString()
+    : "N/A";
+  const capital = country.capital
+    ? Array.isArray(country.capital)
+      ? country.capital.join(", ")
+      : country.capital
+    : "N/A";
+  const region = country.region || "N/A";
+  const subregion = country.subregion || "N/A";
+  const tld = country.tld
+    ? Array.isArray(country.tld)
+      ? country.tld.join(", ")
+      : country.tld
+    : country.topLevelDomain
+    ? Array.isArray(country.topLevelDomain)
+      ? country.topLevelDomain.join(", ")
+      : country.topLevelDomain
+    : "N/A";
+  const flagUrl =
+    country.flags?.svg || country.flags?.png || country.flag || "";
 
-            <img src="${country.flags.svg}" alt="flag"/> 
-                <h3 class="country">${country.name.common}</h3>    
-                <p class="population">Population : <span>${country.population}</span></p>
-                <p class="region">Region : <span>${country.region}</span></p>
-                <p class="capital">Capital : <span>${country.capital}</span></p>
+  let currencies = "N/A";
+  if (country.currencies) {
+    if (Array.isArray(country.currencies)) {
+      currencies = country.currencies
+        .map((curr) => curr.name || curr.code || curr)
+        .join(", ");
+    } else if (typeof country.currencies === "object") {
+      currencies = Object.values(country.currencies)
+        .map((curr) => curr.name || curr)
+        .join(", ");
+    } else {
+      currencies = country.currencies;
+    }
+  }
 
-            </div>`
+  let languages = "N/A";
+  if (country.languages) {
+    if (Array.isArray(country.languages)) {
+      languages = country.languages.map((lang) => lang.name || lang).join(", ");
+    } else if (
+      typeof country.languages === "object" &&
+      !Array.isArray(country.languages)
+    ) {
+      languages = Object.values(country.languages).join(", ");
+    } else {
+      languages = country.languages;
+    }
+  }
+  let nativeName = country.name?.common || country.name || "N/A";
+  if (country.name?.nativeName) {
+    const nativeNames = Object.values(country.name.nativeName);
+    if (nativeNames.length > 0 && nativeNames[0].common) {
+      nativeName = nativeNames[0].common;
+    }
+  } else if (country.nativeName) {
+    nativeName = country.nativeName;
+  }
 
-        display.innerHTML = card;
+  let timezones = "N/A";
+  if (country.timezones) {
+    timezones = Array.isArray(country.timezones)
+      ? country.timezones.join(", ")
+      : country.timezones;
+  }
 
-                       
-    })
-               
+  let borders = "N/A";
+  if (
+    country.borders &&
+    Array.isArray(country.borders) &&
+    country.borders.length > 0
+  ) {
+    const borderNames = country.borders.map((borderCode) => {
+      const borderCountry = allCountries.find(
+        (c) =>
+          c.alpha3Code === borderCode ||
+          c.cca3 === borderCode ||
+          c.alpha2Code === borderCode ||
+          c.cca2 === borderCode
+      );
+      return borderCountry
+        ? borderCountry.name?.common || borderCountry.name
+        : borderCode;
+    });
+    borders = borderNames.join(", ");
+  }
+
+  const details = `
+                <div class="countryCardD">
+                    <img src="${flagUrl}" alt="${
+    country.name?.common || country.name
+  } flag" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2NjYyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOHB4IiBmaWxsPSIjNjY2Ij5ObyBGbGFnPC90ZXh0Pjwvc3ZnPg=='"/>
+                    <div class="details">
+                        <h3>${country.name?.common || country.name}</h3>
+                        <div class="details-grid">
+                            <div class="details-column">
+                                <h5>Native Name: <span>${nativeName}</span></h5>
+                                <h5>Population: <span>${population}</span></h5>
+                                <h5>Region: <span>${region}</span></h5>
+                                <h5>Sub Region: <span>${subregion}</span></h5>
+                                <h5>Capital: <span>${capital}</span></h5>
+                            </div>
+                            <div class="details-column">
+                                <h5>Top Level Domain: <span>${tld}</span></h5>
+                                <h5>Currencies: <span>${currencies}</span></h5>
+                                <h5>Languages: <span>${languages}</span></h5>
+                                <h5>Timezones: <span>${timezones}</span></h5>
+                            </div>
+                        </div>
+                        <div class="borders-section">
+                            <h5>Border Countries: <span>${borders}</span></h5>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+  display.innerHTML = details;
+  hideMainControls();
+}
+
+function searchCountries() {
+  const searchTerm = searchCountry.value.trim().toLowerCase();
+
+  if (searchTerm.length === 0) {
+    filteredCountries = allCountries;
+    displayCountries(filteredCountries);
+    return;
+  }
+
+  filteredCountries = allCountries.filter((country) => {
+    const countryName = (
+      country.name?.common ||
+      country.name ||
+      ""
+    ).toLowerCase();
+    return countryName.includes(searchTerm);
+  });
+
+  displayCountries(filteredCountries);
+}
+
+function filterByRegion() {
+  const region = filterRegion.value.toLowerCase();
+
+  if (!region || region === "all") {
+    filteredCountries = allCountries;
+    displayCountries(filteredCountries);
+    return;
+  }
+
+  filteredCountries = allCountries.filter((country) => {
+    const countryRegion = (country.region || "").toLowerCase();
+    return countryRegion === region;
+  });
+
+  displayCountries(filteredCountries);
+}
+
+function toggleDarkMode() {
+  isDarkMode = !isDarkMode;
+  document.body.classList.toggle("dark", isDarkMode);
+  modeToggle.textContent = isDarkMode ? "🔆 Light Mode" : "🌙 Dark Mode";
+}
+
+function showMainControls() {
+  searchCountry.style.display = "block";
+  filterRegion.style.display = "block";
+  backBtn.style.display = "none";
+}
+
+function hideMainControls() {
+  searchCountry.style.display = "none";
+  filterRegion.style.display = "none";
+  backBtn.style.display = "block";
+}
+
+searchCountry.addEventListener("input", searchCountries);
+filterRegion.addEventListener("change", filterByRegion);
+modeToggle.addEventListener("click", toggleDarkMode);
+backBtn.addEventListener("click", () => {
+  filteredCountries = allCountries;
+  displayCountries(filteredCountries);
+  showMainControls();
+  searchCountry.value = "";
+  filterRegion.value = "";
 });
-}
- filterRegion.addEventListener("change", loadRegion )
 
-
-//darkmode/lightmode features
-
-lightmode.addEventListener("click", dark)
-darkmode.addEventListener("click", light)
-
-function dark() {
-    darkmode.style.display="block"
-    lightmode.style.display="none"
-    wrapper.style.backgroundColor="rgb(43,55,65)"
-    wrapper.style.color="white"
-    document.querySelector("header").style.backgroundColor="rgb(43,55,65)"
-    document.querySelector("#searchCountry").style.backgroundColor="rgb(43,55,65)"
-    document.querySelector("#filterRegion").style.backgroundColor="rgb(43,55,65)"
-    document.querySelector("#searchCountry").style.color="white"
-    document.querySelector("#filterRegion").style.color="white"
-    
-}
-function light() {
-    darkmode.style.display="none"
-    lightmode.style.display="block"
-    wrapper.style.backgroundColor="white"
-    wrapper.style.color="black"
-    document.querySelector("header").style.backgroundColor="white"
-    document.querySelector("#searchCountry").style.color="black"
-    document.querySelector("#filterRegion").style.color="black"
-    document.querySelector("#searchCountry").style.backgroundColor="white"
-    document.querySelector("#filterRegion").style.backgroundColor="white"
-    
-}
-
-// document.querySelector("#backBtn").style.display="none"
-
-
-// function details(){
-//     const apiLink = "https://restcountries.com/v3.1/all";
-
-//     fetch(apiLink)
-//   .then((response) => response.json())
-//   .then((data) => { 
-    
-//     let card = "";
-//     data.map((country)=>{
-//         card += `<div class="countryCardD" >  
-
-//                 <img src="${country.flags.svg}" alt="flag" width=300px/> 
-             
-//                 <h3 class="country">${country.name.common}</h3>   
-//                 <h3 class="country">${country.name.nativeName}</h3>   
-
-//                 <h5 class="population">Population : <span>${country.population}</span></h5>
-//                 <h5 class="region">Region : <span>${country.region}</span></h5>
-//                 <h5 class="subregion">Sub Region : <span>${country.subregion}</span></h5>
-//                 <h5 class="capital">Capital : <span>${country.capital}</span></h5>
-//                 <h5 class="domain">Top Level Domain : <span>${country.tld}</span></h5>
-//                 <h5 class="currency">Currencies : <span>${country.currencies}</span></h5>
-//                 <h5 class="languages">Sub Region : <span>${country.languages}</span></h5>
-                
-
-                
-
-//             </div>`
-//             // displayDetails.style.display="block"
-//             // display.style.display="none"
-//             display.innerHTML = card;
-//                document.querySelector("#backBtn").style.display="block"
-//         // console.log(data);
-//     })
-// })
-// };
-
-// details()
-//   countryCard.addEventListener("click", details)
-
-//   document.querySelector("#backBtn").addEventListener("click", ()=>{
-//     loadAll()
-//   })
+loadAll();
