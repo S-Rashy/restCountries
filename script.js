@@ -23,7 +23,7 @@ async function loadAll() {
   } catch (error) {
     console.error("Error loading data:", error);
     display.innerHTML =
-      '<div class="error">Failed to load countries data. Please make sure data.json file exists and is properly formatted.</div>';
+      '<div class="error">Failed to load countries data.</div>';
   }
 }
 
